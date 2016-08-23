@@ -245,3 +245,8 @@ background: #f3f6f8 url( <?php echo esc_url( $this->get( 'placeholder_image_url'
 background-size: 48px 48px;
 min-height: 48px;
 }
+
+/* WCUS AMP Customizations */
+.hamburger-menu {
+
+}

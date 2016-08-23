@@ -49,13 +49,14 @@ function wcus_amp_init() {
 	add_filter( 'amp_post_template_data', 'wcus_amp_component_scripts' );
 
 	// Our Custom Template AMP hooks.
-	add_action( 'wcus_amp_amp_primary_nav', 'wcus_amp_render_primary_nav' );
-	add_action( 'wcus_amp_sidebar', 'wcus_amp_render_share_buttons' );
+	add_action( 'wcus_amp_primary_nav', 'wcus_amp_render_primary_nav' );
+	add_action( 'wcus_amp_share', 'wcus_amp_render_share_buttons' );
 
-	// Other filters.
-	add_filter( 'the_content', 'wcus_amp_filter_shortcode_podcast' );
-
-	// This fires on 'after_setup_theme' as well.
+	/*
+	 * This fires on 'after_setup_theme' as well. It is located
+	 * in this function so we can ensure the AMP plugin exists
+	 * before we register it.
+	 */
 	wcus_amp_register_nav_menu();
 
 }
@@ -102,12 +103,19 @@ function wcus_amp_add_custom_actions() {
  */
 function wcus_amp_custom_templates( $file, $type, $post ) {
 	$dir = dirname( __FILE__ ) . '/templates/';
+
 	if ( 'single' === $type && ( 'book' === $post->post_type ) ) {
-		// Register a "book" CPT template
+		// Register a "book" CPT template.
 		$file = $dir . 'book.php';
+
+	} elseif ( 'header-bar' === $type ) {
+		// Register our custom header-bar template.
+		$file = $dir . 'header-bar.php';
+
 	} elseif ( 'single' === $type ) {
-		// Register our single template
+		// Register our single template.
 		$file = $dir . 'single.php';
+
 	} elseif ( 'style' === $type ) {
 		// Register our "stylesheet" PHP file.
 		$file = $dir . 'style.php';
@@ -178,7 +186,7 @@ function wcus_amp_register_nav_menu() {
  *
  * Call this function from your template file.
  *
- * Alternatively, add the following HTML markup immediately after the opening
+ * Alternatively, add the enclosed HTML markup immediately after the opening
  * <body> tag in your AMP template file (single.php).
  *
  * The AMP Spec requires that this be a direct child of <body>,
@@ -187,7 +195,7 @@ function wcus_amp_register_nav_menu() {
  * This example uses the site_menu_amp menu we registered in
  * wcus_amp_register_nav_menu().
  *
- * @action wcus_amp_amp_primary_nav
+ * @action wcus_amp_aprimary_nav
  */
 function wcus_amp_render_primary_nav() {
 	?>
@@ -228,15 +236,19 @@ function wcus_amp_clean_nav_menu_items( $location ) {
 /**
  * Render social share buttons.
  *
- * Uses amp-social-share to handle JS functionality.
+ * Uses amp-social-share to handle JS functionality. Be
+ * sure you have this component script registered in
+ * wcus_amp_component_scripts()
  *
- * @action wcus_amp_sidebar
+ * @see wcus_amp_component_scripts()
+ *
+ * @action wcus_amp_share
  */
 function wcus_amp_render_share_buttons() {
 	$fb_app_id = '1234567890'
 	?>
 	<div class="share-buttons">
-		<h6><?php esc_html_e( 'share:', 'wcus-amp' ); ?></h6>
+		<h6><?php esc_html_e( 'Share:', 'wcus-amp' ); ?></h6>
 
 		<amp-social-share type="pinterest" width="32" height="32"
 		                  data-url="<?php echo esc_url( get_permalink() ); ?>"
@@ -266,104 +278,6 @@ function wcus_amp_render_share_buttons() {
 
 	</div>
 	<?php
-}
-
-/**
- * Hijack a hypothetical [podcast] custom shortcode for AMP.
- *
- * Replaces [podcast] output with <amp-audio>.
- *
- * Be sure you've added the amp-audio component script.
- *
- * Note: This will only locate the first occurrence of [podcast], so
- * it would require further expansion for true use.
- *
- * This filter could also be fired on 'pre_amp_render_post'.
- * It is left separate here because this is just example usage.
- *
- * @see wcus_amp_add_custom_actions()
- *
- * @filter the_content
- *
- * @param string $content The Post content.
- *
- * @return string
- */
-function wcus_amp_filter_shortcode_podcast( $content ) {
-	global $shortcode_tags;
-	if ( ! is_amp_endpoint() || empty( $shortcode_tags ) || ! is_array( $shortcode_tags ) ) {
-		return $content;
-	}
-
-	$regex = get_shortcode_regex( array( 'podcast' ) );
-	if ( ! $url = wcus_amp_get_shortcode_attr( $content, $regex, 'mp3' ) ) {
-		// Strip out the shortcode to prevent errant output.
-		return preg_replace( "/$regex/", '', $content );
-	}
-
-	// AMP's amp-audio only supports https:// and //, so ensure we're not using http://.
-	$url = str_replace( 'http:', '', $url );
-	$url = trim( $url );
-
-	ob_start();
-	?>
-	<amp-audio width="auto"
-	           height="50"
-	           src="<?php echo esc_url( $url ); ?>">
-		<div fallback>
-			<p><?php esc_html_e( 'Your browser doesn\'t support HTML5 audio', 'wcus-amp' ); ?></p>
-		</div>
-	</amp-audio>
-	<?php
-	$amp_audio = ob_get_clean();
-	$content = preg_replace( "/$regex/", $amp_audio, $content );
-	return $content;
-}
-
-/**
- * Get a value from a shortcode.
- *
- * Protip: use get_shortcode_regex() to get the proper regex.
- *
- * @param string $content Post content.
- * @param string $regex Regex to compare.
- * @param string $search The Shortcode param to find.
- *
- * @return mixed Param content, else false.
- */
-function wcus_amp_get_shortcode_attr( $content, $regex, $search ) {
-	// Find the shortcode.
-	preg_match( "/$regex/", $content, $shortcode_attrs );
-
-	$search = $search . '=';
-
-	if ( empty( $shortcode_attrs ) ) {
-		return false;
-	}
-
-	// Find item in attrs array that starts with $search.
-	$matches = array_filter( $shortcode_attrs, function( $var ) use ( $search ) {
-		return ( 0 === strpos( trim( $var ), $search ) );
-	}
-	);
-
-	if ( empty( $matches ) ) {
-		return false;
-	}
-
-	// Get the first occurrence of our string.
-	$value_string = array_shift( array_values( $matches ) );
-
-	// Ensure the rest of the match is stripped off (other attrs).
-	$value_array = explode( ' ', $value_string );
-
-	// Remove the "search" string.
-	$val = str_replace( $search , '', $value_array[1] );
-
-	// Strip out both double and/or single quotes.
-	$val = str_replace( '"', '', $val );
-	$val = str_replace( "'", '', $val );
-	return trim( $val );
 }
 
 

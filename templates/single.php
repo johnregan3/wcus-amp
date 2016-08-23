@@ -2,7 +2,7 @@
 /**
  * A Customized single post template.
  *
- * This is copied directly from
+ * This is a modified version of
  * @link https://github.com/Automattic/amp-wp/blob/master/templates/single.php
  *
  * @package WCUS_AMP
@@ -21,6 +21,10 @@
 	</style>
 </head>
 <body>
+<?php
+// This is our custom nav menu.
+
+?>
 <?php $this->load_parts( array( 'header-bar' ) ); ?>
 <div class="amp-wp-content">
 	<h1 class="amp-wp-title"><?php echo wp_kses_data( $this->get( 'post_title' ) ); ?></h1>
@@ -28,6 +32,10 @@
 		<?php $this->load_parts( apply_filters( 'amp_post_template_meta_parts', array( 'meta-author', 'meta-time', 'meta-taxonomy' ) ) ); ?>
 	</ul>
 	<?php echo $this->get( 'post_amp_content' ); // amphtml content; no kses ?>
+	<?php
+	// Here are our custom share buttons.
+	do_action( 'wcus_amp_share' );
+	?>
 </div>
 <?php do_action( 'amp_post_template_footer', $this ); ?>
 </body>

@@ -62,6 +62,6 @@ function wcus_clean_nav_menu_items( $location ) {
  * but it must match the id of the amp-sidebar element.
  */
 ?>
-<button class="menu-toggle" on='tap:site-menu.toggle' aria-label="Toggle Navigation">
-	<?php esc_html_e( 'Navigation', 'wcus-amp' ); ?>
+<button class="menu-toggle" on='tap:site-menu.toggle' aria-label="<?php esc_html_e( 'Toggle Navigation', 'wcus-amp' ); ?>" class="hamburger-menu">
+	<?php esc_html_e( 'Open Menu', 'wcus-amp' ); ?>
 </button>
