@@ -8,7 +8,7 @@ This repo includes both a fully-functional plugin that displays how to customize
 
 [Slides for this talk are available here](http://bit.ly/WCUS-AMP).
 
-### To do
+### To Do:
 - [ ] amp-ads
 - [ ] amp-analytics
 - [ ] amp-carousel
