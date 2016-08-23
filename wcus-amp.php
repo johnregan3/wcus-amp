@@ -103,6 +103,7 @@ function wcus_amp_add_custom_actions() {
 function wcus_amp_custom_templates( $file, $type, $post ) {
 	$dir = dirname( __FILE__ ) . '/templates/';
 	if ( 'single' === $type && ( 'book' === $post->post_type ) ) {
+		// Register a "book" CPT template
 		$file = $dir . 'book.php';
 	} elseif ( 'single' === $type ) {
 		// Register our single template
