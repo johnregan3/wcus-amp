@@ -1,6 +1,6 @@
 # WCUS AMP Plugin
 
-<img src="/img/amp-and-wp-header.jpg" style="text-align: center; max-width: 75%; height: auto; border: 1px solid #eee;"/>
+<img src="/img/amp-and-wp-header.jpg" />
 
 Functioning plugin and Code Samples for WCUS AMP Presentation.
 
