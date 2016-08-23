@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: Wordcamp US AMP Demo
+ * Plugin Name: WordCamp US AMP Demo
  * Plugin URI: https://github.com/johnregan3/wcus-amp/
  * Description: A sample AMP Plugin implementation.  This will not function without the WordPress AMP Plugin by Automattic being active.
  * Version: 1.0.0
