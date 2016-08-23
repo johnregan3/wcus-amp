@@ -2,47 +2,24 @@
 /**
  * Inline style template.
  */
+
+/**
+ * Example of using theme mods from the customizer.
+ *
+ * You'll need to add the controls for this yourself.
+ *
+ * @link https://codex.wordpress.org/Theme_Customization_API
+ *
+ * $header_background_color = ! empty( get_theme_mod( 'amp_header_background_color' ) ) ? get_theme_mod( 'amp_header_background_color' ) : '#fff';
+ *
+ */
+$body_background_color = '#f1f1f1';
+$header_background_color = '#fff';
+$header_text_color = '#333333';
+$post_footer_background_color = '#f7f7f7';
 ?>
-/* Merriweather fonts */
-@font-face {
-	font-family:'Merriweather';
-	src:url('https://s1.wp.com/i/fonts/merriweather/merriweather-regular-webfont.woff2') format('woff2'),
-		url('https://s1.wp.com/i/fonts/merriweather/merriweather-regular-webfont.woff') format('woff'),
-		url('https://s1.wp.com/i/fonts/merriweather/merriweather-regular-webfont.ttf') format('truetype'),
-		url('https://s1.wp.com/i/fonts/merriweather/merriweather-regular-webfont.svg#merriweatherregular') format('svg');
-	font-weight:400;
-	font-style:normal;
-}
-
-@font-face {
-	font-family:'Merriweather';
-	src:url('https://s1.wp.com/i/fonts/merriweather/merriweather-italic-webfont.woff2') format('woff2'),
-		url('https://s1.wp.com/i/fonts/merriweather/merriweather-italic-webfont.woff') format('woff'),
-		url('https://s1.wp.com/i/fonts/merriweather/merriweather-italic-webfont.ttf') format('truetype'),
-		url('https://s1.wp.com/i/fonts/merriweather/merriweather-italic-webfont.svg#merriweatheritalic') format('svg');
-	font-weight:400;
-	font-style:italic;
-}
-
-@font-face {
-	font-family:'Merriweather';
-	src:url('https://s1.wp.com/i/fonts/merriweather/merriweather-bold-webfont.woff2') format('woff2'),
-		url('https://s1.wp.com/i/fonts/merriweather/merriweather-bold-webfont.woff') format('woff'),
-		url('https://s1.wp.com/i/fonts/merriweather/merriweather-bold-webfont.ttf') format('truetype'),
-		url('https://s1.wp.com/i/fonts/merriweather/merriweather-bold-webfont.svg#merriweatherbold') format('svg');
-	font-weight:700;
-	font-style:normal;
-}
-
-@font-face {
-	font-family:'Merriweather';
-	src:url('https://s1.wp.com/i/fonts/merriweather/merriweather-bolditalic-webfont.woff2') format('woff2'),
-		url('https://s1.wp.com/i/fonts/merriweather/merriweather-bolditalic-webfont.woff') format('woff'),
-		url('https://s1.wp.com/i/fonts/merriweather/merriweather-bolditalic-webfont.ttf') format('truetype'),
-		url('https://s1.wp.com/i/fonts/merriweather/merriweather-bolditalic-webfont.svg#merriweatherbold_italic') format('svg');
-	font-weight:700;
-	font-style:italic;
-}
+/* Noto Serif Font */
+@import 'https://fonts.googleapis.com/css?family=Noto+Sans:400,400i,700.700i|Noto+Serif:400,400i,700,700i';
 
 /* Generic WP styling */
 amp-img.alignright { float: right; margin: 0 0 1em 1em; }
@@ -76,32 +53,31 @@ amp-img.aligncenter { display: block; margin-left: auto; margin-right: auto; }
 }
 
 body {
-font-family: 'Merriweather', Serif;
+font-family: 'Noto Serif', Serif;
 font-size: 16px;
 line-height: 1.8;
-background: #fff;
-color: #3d596d;
+background: <?php echo esc_html( $body_background_color ); ?>;
+color: #333;
 padding-bottom: 100px;
 }
 
 .amp-wp-content {
-padding: 16px;
 overflow-wrap: break-word;
 word-wrap: break-word;
 font-weight: 400;
 color: #3d596d;
+background: #fff;
+box-shadow: 0 0 1px rgba(0, 0, 0, 0.15);
 }
 
 .amp-wp-title {
-margin: 36px 0 0 0;
+padding: 16px;
+margin: 0;
+font-family: 'Noto Sans', Sans;
 font-size: 36px;
 line-height: 1.258;
 font-weight: 700;
 color: #2e4453;
-}
-
-.amp-wp-meta {
-margin-bottom: 16px;
 }
 
 p,
@@ -122,6 +98,10 @@ a:focus {
 color: #33bbe3;
 }
 
+.amp-wp-content > p {
+margin: 16px;
+}
+
 
 /* UI Fonts */
 .amp-wp-meta,
@@ -134,7 +114,7 @@ font-size: 15px;
 
 /* Meta */
 ul.amp-wp-meta {
-padding: 24px 0 0 0;
+padding: 0 24px 0 24px;
 margin: 0 0 24px 0;
 }
 
@@ -181,19 +161,30 @@ top: 6px;
 margin-right: 6px;
 }
 
+.share-buttons {
+padding: 16px;
+background: <?php echo esc_html( $post_footer_background_color ); ?>;
+}
+
 /* Titlebar */
 nav.amp-wp-title-bar {
-background: <?php echo esc_html( $this->get_customizer_setting( 'navbar_background', self::DEFAULT_NAVBAR_BACKGROUND ) ); // not ideal for escaping here, but better than nothing? ?>;
-padding: 0 16px;
+background: <?php echo esc_html( $header_background_color ); // not ideal for escaping here, but better than nothing. ?>;
+font-family: 'Noto Sans', sans-serif;
+padding: 16px 16px;
+font-weight: bold;
+font-size: 32px;
+box-shadow: 0 0 1px rgba(0, 0, 0, 0.15);
+margin-bottom: 36px;
+position: relative;
 }
 
 nav.amp-wp-title-bar div {
-line-height: 54px;
-color: <?php echo esc_html( $this->get_customizer_setting( 'navbar_color', self::DEFAULT_NAVBAR_COLOR ) ); ?>;
+line-height: 36px;
+color: <?php echo esc_html( $header_text_color ); ?>;
 }
 
 nav.amp-wp-title-bar a {
-color: <?php echo esc_html( $this->get_customizer_setting( 'navbar_color', self::DEFAULT_NAVBAR_COLOR ) ); ?>;
+color: <?php echo esc_html( $header_text_color ); ?>;
 text-decoration: none;
 }
 
@@ -246,7 +237,60 @@ background-size: 48px 48px;
 min-height: 48px;
 }
 
-/* WCUS AMP Customizations */
-.hamburger-menu {
+#site-menu {
+/* Override !important used in amp-sidebar default styles */
+padding: 0 64px 0 32px !important;
+background: #fff;
+box-shadow: 0 0 1px rgba(0, 0, 0, 0.15);
+padding: 48px;
+}
 
+#site-menu h2 {
+margin-top: 16px;
+margin-bottom: 0;
+font-size: 32px;
+font-family: 'Noto Sans', sans-serif;
+}
+
+#site-menu ul {
+list-style: none;
+margin: 0;
+padding: 0;
+border-top: 1px solid rgba(51, 51, 51, 0.1);
+}
+
+#site-menu li {
+border-bottom: 1px solid rgba(51, 51, 51, 0.1);
+line-height: 1.5;
+padding: 0.5em 0;
+min-width: 15em;
+}
+
+#site-menu a {
+color: #333;
+text-decoration: none;
+
+}
+
+.menu-button {
+background: transparent;
+border: 1px solid #eaeaea;
+height: 41px;
+overflow: hidden;
+padding: 0;
+position: absolute;
+top: 16px;
+right: 16px;
+text-align: center;
+width: 42px;
+}
+
+.menu-button img {
+width: 36px;
+height: auto;
+margin: 3px 0 0 2px;
+}
+
+.cus-amp-featured-image {
+margin-bottom: 16px;
 }

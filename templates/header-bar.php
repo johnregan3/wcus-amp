@@ -24,11 +24,13 @@ do_action( 'wcus_amp_primary_nav' );
 			<?php echo esc_html( $this->get( 'blog_name' ) ); ?>
 		</a>
 
-		<?php // This will load our custom Nav Menu button. ?>
-		<button class="menu-toggle" on='tap:site-menu.toggle' aria-label="<?php esc_html_e( 'Toggle Navigation', 'wcus-amp' ); ?>">
-			<img src="<?php echo esc_url( plugin_dir_url( __FILE__ ) . 'templates/img/hamburger.svg' ); ?>" alt="<?php esc_html_e( 'Open Menu', 'wcus-amp' ); ?>" />
-			<?php esc_html_e( 'Open Menu', 'wcus-amp' ); ?>
-		</button>
-
+		<?php
+		// This will load our custom Nav Menu button.
+		if ( has_nav_menu( 'site_menu_amp' ) ) : ?>
+			<!-- Hamburger Icon by Google Inc., CC BY 4.0, https://commons.wikimedia.org/w/index.php?curid=36335116 -->
+			<div class="menu-button">
+				<img src="<?php echo esc_url( plugin_dir_url( __FILE__ ) . 'img/hamburger.svg' ); ?>" alt="<?php esc_html_e( 'Open Menu', 'wcus-amp' ); ?>" on='tap:site-menu.toggle' aria-label="<?php esc_html_e( 'Toggle Navigation', 'wcus-amp' ); ?>" />
+			</div>
+		<?php endif; ?>
 	</div>
 </nav>

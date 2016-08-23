@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: WCUS AMP
+ * Plugin Name: WordCamp US AMP Demo
  * Plugin URI: https://github.com/johnregan3/wcus-amp/
  * Description: A sample AMP Plugin implementation.  This will not function without the WordPress AMP Plugin by Automattic being active.
  * Version: 1.0.0
@@ -19,6 +19,9 @@
  * @package WCUS_AMP
  */
 
+// Include plugin.php so we have access to is_plugin_active().
+include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+
 /*
  * Launch the plugin.
  *
@@ -36,7 +39,7 @@ add_action( 'after_setup_theme', 'wcus_amp_init', 9 );
  */
 function wcus_amp_init() {
 	// Ensure the AMP plugin is being used.
-	if ( ! is_plugin_active( 'amp/amp.php' ) ) {
+	if ( ! is_plugin_active( 'amp-wp/amp.php' ) ) {
 		return;
 	}
 
@@ -152,7 +155,7 @@ function wcus_amp_component_scripts( $data ) {
 function wcus_amp_add_featured_image( $content ) {
 	if ( has_post_thumbnail() ) {
 		// Just add the raw <img /> tag; the WP AMP sanitizer will take care of it later.
-		$image = sprintf( '<p class="wcus-amp-featured-image">%s</p>', get_the_post_thumbnail() );
+		$image = sprintf( '<div class="wcus-amp-featured-image">%s</div>', get_the_post_thumbnail() );
 		$content = $image . $content;
 	}
 	return $content;
@@ -164,7 +167,7 @@ function wcus_amp_add_featured_image( $content ) {
  * This example is using 'site_menu_amp'.
  *
  * Navigate to Appearance > Menus to
- * fill this menu with items.
+ * fill the "AMP Site Menu" menu location with items.
  *
  * @see wcus_amp_render_primary_nav()
  *
@@ -198,11 +201,19 @@ function wcus_amp_register_nav_menu() {
  * @action wcus_amp_aprimary_nav
  */
 function wcus_amp_render_primary_nav() {
+	//@todo check if nav actually exists && is assigned.
+	if ( ! has_nav_menu( 'site_menu_amp' ) ) {
+		return false;
+	}
 	?>
-	<ul>
-		<?php echo wp_kses_post( wcus_amp_clean_nav_menu_items( 'site_menu_amp' ) ); ?>
-	</ul>
-	<button on='tap:site-menu.close' title="<?php esc_attr( 'Close', 'wcus-amp' ); ?>"></button>
+	<amp-sidebar id="site-menu" layout="nodisplay">
+		<h2><?php esc_html_e( 'Menu', 'wcus-amp' ); ?>
+			<img class="menu-button" src="<?php echo esc_url( plugin_dir_url( __FILE__ ) . 'templates/img/close.svg' ); ?>" alt="<?php esc_html_e( 'Toggle Navigation', 'wcus-amp' ); ?>" on='tap:site-menu.close' aria-label="<?php esc_html_e( 'Toggle Navigation', 'wcus-amp' ); ?>" /></h2>
+		<ul>
+			<?php echo wp_kses_post( wcus_amp_clean_nav_menu_items( 'site_menu_amp' ) ); ?>
+		</ul>
+
+	</amp-sidebar>
 	<?php
 }
 
@@ -229,7 +240,9 @@ function wcus_amp_clean_nav_menu_items( $location ) {
 	ob_start();
 	foreach ( $menu_items as $key => $menu_item ) : ?>
 		<li><a href="<?php echo esc_url( $menu_item->url ); ?>"><?php echo esc_html( $menu_item->title ); ?></a></li>
-	<?php endforeach;
+	<?php endforeach; ?>
+	<!-- Close Icon By VisualEditor team - https://git.wikimedia.org/summary/mediawiki%2Fextensions%2FVisualEditor.git, MIT, https://commons.wikimedia.org/w/index.php?curid=26927389 -->
+	<?php
 	return ob_get_clean();
 }
 
@@ -248,7 +261,7 @@ function wcus_amp_render_share_buttons() {
 	$fb_app_id = '1234567890'
 	?>
 	<div class="share-buttons">
-		<h6><?php esc_html_e( 'Share:', 'wcus-amp' ); ?></h6>
+		<?php esc_html_e( 'Share this post:', 'wcus-amp' ); ?><br />
 
 		<amp-social-share type="pinterest" width="32" height="32"
 		                  data-url="<?php echo esc_url( get_permalink() ); ?>"

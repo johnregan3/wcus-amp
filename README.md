@@ -17,6 +17,8 @@ This repo includes both a fully-functional plugin that displays how to customize
 - [ ] amp-twitter
 - [ ] amp-vine
 - [ ] amp-youtube
+- [ ] set placeholder image url
+- [ ] custom footer
 
 ---
 Author: [John Regan](http://johnregan3.com) | [Twitter](http://twitter.com/johnregan3) | [WordPress.org](https://profiles.wordpress.org/johnregan3)

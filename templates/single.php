@@ -21,10 +21,6 @@
 	</style>
 </head>
 <body>
-<?php
-// This is our custom nav menu.
-
-?>
 <?php $this->load_parts( array( 'header-bar' ) ); ?>
 <div class="amp-wp-content">
 	<h1 class="amp-wp-title"><?php echo wp_kses_data( $this->get( 'post_title' ) ); ?></h1>
@@ -33,7 +29,9 @@
 	</ul>
 	<?php echo $this->get( 'post_amp_content' ); // amphtml content; no kses ?>
 	<?php
-	// Here are our custom share buttons.
+	/*
+	 * Here are our custom share buttons.
+	 */
 	do_action( 'wcus_amp_share' );
 	?>
 </div>
