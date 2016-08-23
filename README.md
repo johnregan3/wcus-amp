@@ -1,5 +1,7 @@
 # WCUS AMP Plugin
 
+<img src="/img/amp-and-wp-header.jpg" style="text-align: center"/>
+
 Functioning plugin and Code Samples for WCUS AMP Presentation.
 
 This repo includes both a functioning plugin that displays how the default template provided by Automattic's AMP plugin can be customized, as well as a bunch of individual code sample files showing how you can do this in your own projects.
