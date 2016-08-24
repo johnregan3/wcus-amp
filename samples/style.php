@@ -2,12 +2,15 @@
 /**
  * Slightly modified version of the default WP AMP stylesheet, style.php.
  *
- * This is pared down for clarity.
+ * This is pared down for clarity.  There is a fully-customized version of this
+ * in wcus-amp/templates/style.php.
  *
  * @link https://github.com/Automattic/amp-wp/blob/master/templates/style.php
  *
  * @package WCUS_AMP
  */
+
+$body_color = '#333';
 ?>
 /* Merriweather fonts */
 @font-face {
@@ -46,7 +49,7 @@ object-fit: contain;
 .amp-wp-content, .amp-wp-title-bar div {
 <?php $content_max_width = absint( $this->get( 'content_max_width' ) ); ?>
 <?php if ( $content_max_width > 0 ) : ?>
-	max-width: <?php echo sprintf( '%dpx', $content_max_width ); ?>;
+	max-width: <?php echo esc_html( sprintf( '%dpx', $content_max_width ) ); ?>;
 	margin: 0 auto;
 <?php endif; ?>
 }
@@ -56,7 +59,7 @@ font-family: 'Merriweather', Serif;
 font-size: 16px;
 line-height: 1.8;
 background: #fff;
-color: #3d596d;
+color: <?php echo esc_html( $body_color ); // This is currently the best method available for escaping output in CSS. ?>;
 padding-bottom: 100px;
 }
 

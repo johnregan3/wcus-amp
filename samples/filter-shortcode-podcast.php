@@ -1,5 +1,11 @@
 <?php
 /**
+ * Example of how to filter a shortcode for AMP compliance.
+ *
+ * @package WCUS_AMP
+ */
+
+/**
  * Hijack a hypothetical [podcast] custom shortcode for AMP.
  *
  * Replaces [podcast] output with <amp-audio>.
@@ -54,7 +60,7 @@ add_filter( 'the_content', 'wcus_amp_filter_shortcode_podcast' );
  *
  * Example:
  *
- * Search for the podcast shortcode looks like this in the Post content:
+ * Search for the podcast shortcode that looks like this in the Post content:
  * [podcast url="http://example.com/audio.mp3"]
  * and you want to get the value of "url"...
  *

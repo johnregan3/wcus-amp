@@ -1,5 +1,11 @@
 <?php
 /**
+ * Example of how to register CPTS with the AMP Plugin.
+ *
+ * @package WCUS_AMP
+ */
+
+/**
  * Register CPTs to be supported by Automattic's AMP Plugin.
  *
  * Be sure to visit Settings > Permalinks and save

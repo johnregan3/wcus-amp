@@ -1,6 +1,16 @@
 <?php
 /**
  * Register the amp-sidebar and amp-accordion component scripts with WP AMP.
+ *
+ * @package WCUS_AMP
+ */
+
+/**
+ * Register Component Scripts.
+ *
+ * @param array $data AMP Data.
+ *
+ * @return array
  */
 function wcus_amp_component_scripts( $data ) {
 	$amp_cdn = 'https://cdn.ampproject.org/v0/';

@@ -1,5 +1,11 @@
 <?php
 /**
+ * Bonus Admin Notice helper.
+ *
+ * @package WCUS_AMP
+ */
+
+/**
  * Show an Admin Notice if the AMP plugin is not found.
  *
  * This is a basic implementation.  Naturally, you'll want

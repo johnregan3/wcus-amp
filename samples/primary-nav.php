@@ -1,14 +1,13 @@
 <?php
 /**
- * Register the amp-sidebar component script with WP AMP.
+ * Example of how to create a Navigation Menu in AMP.
  *
- * You may have already done this elsewhere.
+ * Be sure to register amp-sidebar component script.
+ *
+ * @see component-scripts.php
+ *
+ * @package WCUS_AMP
  */
-function wcus_amp_sidebar_component_script( $data ) {
-	$data['amp_component_scripts']['amp-sidebar'] = 'https://cdn.ampproject.org/v0/amp-sidebar-0.1.js';
-	return $data;
-}
-add_filter( 'amp_post_template_data', 'wcus_amp_sidebar_component_script' );
 
 /**
  * Render a menu with clean markup.
@@ -20,7 +19,7 @@ add_filter( 'amp_post_template_data', 'wcus_amp_sidebar_component_script' );
  *
  * @return string
  */
-function wcus_clean_nav_menu_items( $location ) {
+function wcus_amp_clean_nav_menu_items( $location ) {
 	$locations = get_nav_menu_locations();
 	if ( empty( $locations[ $location ] ) ) {
 		return '';
@@ -33,27 +32,33 @@ function wcus_clean_nav_menu_items( $location ) {
 	ob_start();
 	foreach ( $menu_items as $key => $menu_item ) : ?>
 		<li><a href="<?php echo esc_url( $menu_item->url ); ?>"><?php echo esc_html( $menu_item->title ); ?></a></li>
-	<?php endforeach;
+	<?php endforeach; ?>
+	<li on="tap:site-menu.close"><?php esc_html_e( 'Close', 'wcus-amp' ); ?></li>
+	<?php
 	return ob_get_clean();
 }
 
 /*
  * Add the following HTML markup immediately after the opening
- * <body> tag in your AMP template file (single.php).
+ * <body> tag in your AMP template file (header-bar.php or single.php).
+ *
+ * I personally recommend wrapping each of these in a function, then firing them
+ * with a custom action hook in your template.
  *
  * The AMP Spec requires that this be a direct child of <body>,
- * and only one of these is allowed on a page.
+ * and only one of these amp-sidebars is allowed on a page.
  */
 ?>
 <amp-sidebar id="site-menu" layout="nodisplay">
 	<ul>
 		<?php // Replace 'primary' with whatever menu location you need. ?>
-		<?php echo wp_kses_post( wcus_clean_nav_menu_items( 'primary' ) ); ?>
-		<li on="tap:site-menu.close"><?php esc_html_e( 'Close', 'wcus-amp' ); ?></li>
+		<?php echo wp_kses_post( wcus_amp_clean_nav_menu_items( 'primary' ) ); ?>
+
 	</ul>
 </amp-sidebar>
 
 <?php
+
 /*
  * Add the following button to your single.php template file
  * wherever you need it.
