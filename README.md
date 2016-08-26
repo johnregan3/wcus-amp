@@ -5,7 +5,7 @@
 ### Overview
 This repo includes both a fully-functional plugin that demonstrates how to customize the default template provided by Automattic's AMP plugin, as well as many code samples showing how you can do this in your own projects.
 
-This plugin is written for a planned talk at [WordCamp US](https://2016.us.wordcamp.org).
+This plugin is written for a planned talk at [WordCamp US](https://2016.us.wordcamp.org).<br />
 [Slides for this talk are available here](http://bit.ly/WCUS-AMP).
 
 ### Detail
