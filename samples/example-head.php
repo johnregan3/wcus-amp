@@ -8,6 +8,7 @@
  *
  * @package WCUS_AMP
  */
+
 ?>
 <!doctype html>
 <html ⚡>

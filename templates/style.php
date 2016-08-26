@@ -1,6 +1,8 @@
 <?php
 /**
  * Inline style template.
+ *
+ * @package WCUS_AMP
  */
 
 /**
@@ -11,11 +13,10 @@
  * @link https://codex.wordpress.org/Theme_Customization_API
  *
  * $header_background_color = ! empty( get_theme_mod( 'amp_header_background_color' ) ) ? get_theme_mod( 'amp_header_background_color' ) : '#fff';
- *
  */
 $body_background_color = '#f1f1f1';
 $header_background_color = '#fff';
-$header_text_color = '#333333';
+$text_color = '#333';
 $post_footer_background_color = '#f7f7f7';
 ?>
 /* Noto Serif Font */
@@ -44,10 +45,10 @@ amp-img.aligncenter { display: block; margin-left: auto; margin-right: auto; }
 }
 
 /* Template Styles */
-.amp-wp-content, .amp-wp-title-bar div {
+.amp-wp-content, .amp-wp-title-bar div, .after-post, .page-footer .wrap {
 	<?php $content_max_width = absint( $this->get( 'content_max_width' ) ); ?>
 <?php if ( $content_max_width > 0 ) : ?>
-	max-width: <?php echo sprintf( '%dpx', $content_max_width ); ?>;
+	max-width: <?php echo esc_html( sprintf( '%dpx', $content_max_width ) ); ?>;
 	margin: 0 auto;
 <?php endif; ?>
 }
@@ -57,7 +58,7 @@ font-family: 'Noto Serif', Serif;
 font-size: 16px;
 line-height: 1.8;
 background: <?php echo esc_html( $body_background_color ); ?>;
-color: #333;
+color: <?php echo esc_html( $text_color ); ?>;
 padding-bottom: 100px;
 }
 
@@ -161,14 +162,30 @@ top: 6px;
 margin-right: 6px;
 }
 
-.share-buttons {
+.post-footer {
 padding: 16px;
 background: <?php echo esc_html( $post_footer_background_color ); ?>;
 }
 
+.after-post {
+text-align: center;
+margin: 36px auto;
+}
+
+.page-footer {
+background: <?php echo esc_html( $header_background_color ); ?>;
+padding: 16px 16px;
+box-shadow: 0 0 1px rgba(0, 0, 0, 0.15);
+text-align: center;
+}
+
+.page-footer a {
+color: <?php echo esc_html( $text_color ); ?>;
+}
+
 /* Titlebar */
 nav.amp-wp-title-bar {
-background: <?php echo esc_html( $header_background_color ); // not ideal for escaping here, but better than nothing. ?>;
+background: <?php echo esc_html( $header_background_color ); // Not ideal for escaping here, but better than nothing. ?>;
 font-family: 'Noto Sans', sans-serif;
 padding: 16px 16px;
 font-weight: bold;
@@ -180,11 +197,11 @@ position: relative;
 
 nav.amp-wp-title-bar div {
 line-height: 36px;
-color: <?php echo esc_html( $header_text_color ); ?>;
+color: <?php echo esc_html( $text_color ); ?>;
 }
 
 nav.amp-wp-title-bar a {
-color: <?php echo esc_html( $header_text_color ); ?>;
+color: <?php echo esc_html( $text_color ); ?>;
 text-decoration: none;
 }
 

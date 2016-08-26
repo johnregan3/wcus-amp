@@ -15,8 +15,8 @@
  *
  * @package WCUS_AMP
  */
-?>
 
+?>
 <amp-ad width="300"
 		height="250"
 		type="a9"

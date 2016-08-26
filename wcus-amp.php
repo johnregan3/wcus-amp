@@ -2,7 +2,7 @@
 /**
  * Plugin Name: WordCamp US AMP Demo
  * Plugin URI: https://github.com/johnregan3/wcus-amp/
- * Description: A sample AMP Plugin implementation.  This will not function without the WordPress AMP Plugin by Automattic being active.
+ * Description: A demonstration of customizing AMP Plugin.  This will not function without the WordPress AMP Plugin by Automattic being active.
  * Version: 1.0.0
  * Author: John Regan
  * Author URI: https://profiles.wordpress.org/johnregan3
@@ -10,11 +10,16 @@
  * License: GPL-2.0+
  * License URI: http://www.gnu.org/licenses/gpl-2.0.txt
  *
- * This plugin requires the AMP Plugin by Automattic
- * @link https://wordpress.org/plugins/amp/
+ * This plugin demonstrates how to customize the output
+ * and appearance of an AMP template using the WordPress
+ * AMP Plugin.
  *
- * Code samples are found in the /samples directory.
- * They are not used in this plugin directly.
+ * There are code samples found in the /samples directory.
+ * They are not used in the functionality of this plugin.
+ *
+ * This plugin requires the AMP Plugin by Automattic.
+ *
+ * @link https://wordpress.org/plugins/amp/
  *
  * @package WCUS_AMP
  */
@@ -43,21 +48,24 @@ function wcus_amp_init() {
 		return;
 	}
 
-	// AMP hooks.
+	// AMP Plugin hooks.
 	add_action( 'amp_init', 'wcus_amp_register_post_types' );
 	add_action( 'pre_amp_render_post', 'wcus_amp_add_custom_actions' );
 
-	// AMP Template hooks.
+	// AMP Plugin Template hooks.
 	add_filter( 'amp_post_template_file', 'wcus_amp_custom_templates', 10, 3 );
 	add_filter( 'amp_post_template_data', 'wcus_amp_component_scripts' );
+	add_filter( 'amp_post_template_data', 'wcus_amp_set_custom_placeholder_image' );
+	add_filter( 'amp_post_template_footer', 'wcus_amp_footer' );
 
-	// Our Custom Template AMP hooks.
+	// Custom hooks we've added to our templates.
 	add_action( 'wcus_amp_primary_nav', 'wcus_amp_render_primary_nav' );
-	add_action( 'wcus_amp_share', 'wcus_amp_render_share_buttons' );
+	add_action( 'wcus_amp_post_footer', 'wcus_amp_render_share_buttons' );
+	add_action( 'wcus_amp_after_post', 'wcus_amp_render_ad_slot' );
 
 	/*
-	 * This fires on 'after_setup_theme' as well. It is located
-	 * in this function so we can ensure the AMP plugin exists
+	 * This is located within this function
+	 * so we can ensure the AMP plugin exists
 	 * before we register it.
 	 */
 	wcus_amp_register_nav_menu();
@@ -69,6 +77,13 @@ function wcus_amp_init() {
  *
  * Be sure to visit Settings > Permalinks and save
  * to ensure the rewrite rules are flushed after adding this.
+ *
+ * Note that the AMP_QUERY_VAR will be overridden with
+ * the filter we added above.
+ *
+ * Aren't hooks nice?
+ *
+ * @see wcus_amp_change_endpoint().
  *
  * @action amp_init
  */
@@ -89,10 +104,36 @@ function wcus_amp_add_custom_actions() {
 }
 
 /**
+ * Add Featured Image Support.
+ *
+ * @link https://github.com/Automattic/amp-wp#featured-image
+ *
+ * @see wcus_amp_add_custom_actions
+ *
+ * @filter wcus_amp_add_featured_image
+ *
+ * @param string $content The post content.
+ *
+ * @return string
+ */
+function wcus_amp_add_featured_image( $content ) {
+	if ( has_post_thumbnail() ) {
+		// Just add the raw <img /> tag; the WP AMP sanitizer will take care of it later.
+		$image = sprintf( '<div class="wcus-amp-featured-image">%s</div>', get_the_post_thumbnail() );
+		$content = $image . $content;
+	}
+	return $content;
+}
+
+/**
  * Add custom AMP template files.
  *
  * This example includes a custom template for
  * a "book" CPT that does not exist within this plugin.
+ *
+ * You will also need to register your CPTs with the plugin.
+ *
+ * @see samples/register-cpts.php
  *
  * Registers templates from within a /templates subdirectory.
  *
@@ -137,6 +178,7 @@ function wcus_amp_custom_templates( $file, $type, $post ) {
  */
 function wcus_amp_component_scripts( $data ) {
 	$amp_cdn = 'https://cdn.ampproject.org/v0/';
+	$data['amp_component_scripts']['amp-ad'] = $amp_cdn . 'amp-ad-0.1.js';
 	$data['amp_component_scripts']['amp-sidebar'] = $amp_cdn . 'amp-sidebar-0.1.js';
 	$data['amp_component_scripts']['amp-audio'] = $amp_cdn . 'amp-audio-0.1.js';
 	$data['amp_component_scripts']['amp-social-share'] = $amp_cdn . 'amp-social-share-0.1.js';
@@ -144,21 +186,17 @@ function wcus_amp_component_scripts( $data ) {
 }
 
 /**
- * Add Featured Image Support.
+ * Register a custom iframe placeholder image.
  *
- * @link https://github.com/Automattic/amp-wp#featured-image
+ * @action amp_post_template_data
  *
- * @param string $content The post content.
+ * @param array $data AMP Data.
  *
- * @return string
+ * @return array
  */
-function wcus_amp_add_featured_image( $content ) {
-	if ( has_post_thumbnail() ) {
-		// Just add the raw <img /> tag; the WP AMP sanitizer will take care of it later.
-		$image = sprintf( '<div class="wcus-amp-featured-image">%s</div>', get_the_post_thumbnail() );
-		$content = $image . $content;
-	}
-	return $content;
+function wcus_amp_set_custom_placeholder_image( $data ) {
+	$data['placeholder_image_url'] = plugin_dir_url( __FILE__ ) . 'templates/img/placeholder.jpg';
+	return $data;
 }
 
 /**
@@ -187,10 +225,12 @@ function wcus_amp_register_nav_menu() {
  *
  * Uses amp-sidebar to handle the slideout animation.
  *
- * Call this function from your template file.
+ * I'm using an action hook to insert this markup, but
+ * you can call this function from your template file.
  *
- * Alternatively, add the enclosed HTML markup immediately after the opening
- * <body> tag in your AMP template file (single.php).
+ * You can also insert the enclosed HTML markup
+ * immediately after the opening <body> tag in your
+ * AMP template file (e.g., single.php).
  *
  * The AMP Spec requires that this be a direct child of <body>,
  * and only one of these is allowed on a page.
@@ -198,10 +238,10 @@ function wcus_amp_register_nav_menu() {
  * This example uses the site_menu_amp menu we registered in
  * wcus_amp_register_nav_menu().
  *
- * @action wcus_amp_aprimary_nav
+ * @action wcus_amp_primary_nav
  */
 function wcus_amp_render_primary_nav() {
-	//@todo check if nav actually exists && is assigned.
+	// @todo check if nav actually exists && is assigned.
 	if ( ! has_nav_menu( 'site_menu_amp' ) ) {
 		return false;
 	}
@@ -240,9 +280,7 @@ function wcus_amp_clean_nav_menu_items( $location ) {
 	ob_start();
 	foreach ( $menu_items as $key => $menu_item ) : ?>
 		<li><a href="<?php echo esc_url( $menu_item->url ); ?>"><?php echo esc_html( $menu_item->title ); ?></a></li>
-	<?php endforeach; ?>
-	<!-- Close Icon By VisualEditor team - https://git.wikimedia.org/summary/mediawiki%2Fextensions%2FVisualEditor.git, MIT, https://commons.wikimedia.org/w/index.php?curid=26927389 -->
-	<?php
+	<?php endforeach;
 	return ob_get_clean();
 }
 
@@ -251,14 +289,18 @@ function wcus_amp_clean_nav_menu_items( $location ) {
  *
  * Uses amp-social-share to handle JS functionality. Be
  * sure you have this component script registered in
- * wcus_amp_component_scripts()
+ * wcus_amp_component_scripts().
+ *
+ * You'll need to get a Facebook App ID for this to
+ * function correctly.  Using a dummy App ID here to
+ * show how it works.
  *
  * @see wcus_amp_component_scripts()
  *
- * @action wcus_amp_share
+ * @action wcus_amp_post_footer
  */
 function wcus_amp_render_share_buttons() {
-	$fb_app_id = '1234567890'
+	$fb_app_id = '0000000000'
 	?>
 	<div class="share-buttons">
 		<?php esc_html_e( 'Share this post:', 'wcus-amp' ); ?><br />
@@ -290,6 +332,54 @@ function wcus_amp_render_share_buttons() {
 		</amp-social-share>
 
 	</div>
+	<?php
+}
+
+/**
+ * Insert an ad.
+ *
+ * This is a simple example of inserting
+ * an ad into a page.
+ *
+ * Each ad provider uses their own custom
+ * parameters, and these are designated by using
+ * the "data-" prefix.
+ *
+ * Also, if a parameter is called "fooBar,"
+ * use 'data-foo-bar' to represent this value.
+ *
+ * @link https://github.com/ampproject/amphtml/blob/master/extensions/amp-ad/amp-ad.md
+ *
+ * Note: wp_kses() doesn't handle HTML tags with
+ * hyphens, so escaping when echoing this output
+ * can be tricky if you're going that route.
+ *
+ * @link https://core.trac.wordpress.org/ticket/34105
+ *
+ * @action wcus_amp_after_post
+ */
+function wcus_amp_render_ad_slot() {
+	?>
+	<amp-ad width="300"
+		height="250"
+		type="a9"
+		data-aax_size="300x250"
+		data-aax_pubname="test123"
+		data-aax_src="302">
+	</amp-ad>
+	<?php
+}
+
+/**
+ * Render our Page Footer.
+ *
+ * @action amp_post_template_footer
+ */
+function wcus_amp_footer() {
+	?>
+	<footer class="page-footer">
+		<small>&copy;&nbsp;<?php echo esc_html( date( 'Y' ) ); ?>, <a href="<?php echo esc_url( get_site_url() ); ?>"><?php echo esc_html( get_bloginfo( 'name' ) ); ?></a>&nbsp;|&nbsp;<a href="<?php echo esc_url( __( 'https://wordpress.org/', 'wcus-amp' ) ); ?>"><?php echo esc_html( sprintf( __( 'Proudly powered by %s', 'wcus-amp' ), 'WordPress' ) ); ?></a></small>
+	</footer>
 	<?php
 }
 

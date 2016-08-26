@@ -3,11 +3,11 @@
  * Our custom header-bar template file.
  *
  * This is a modified version of
+ *
  * @link https://github.com/Automattic/amp-wp/blob/master/templates/header-bar.php
  *
  * @package WCUS_AMP
  */
-
 
 $site_icon_url = $this->get( 'site_icon_url' );
 

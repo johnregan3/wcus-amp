@@ -3,10 +3,12 @@
  * A Customized single post template.
  *
  * This is a modified version of
+ *
  * @link https://github.com/Automattic/amp-wp/blob/master/templates/single.php
  *
  * @package WCUS_AMP
  */
+
 ?>
 <!doctype html>
 <html amp <?php language_attributes(); ?>>
@@ -27,12 +29,24 @@
 	<ul class="amp-wp-meta">
 		<?php $this->load_parts( apply_filters( 'amp_post_template_meta_parts', array( 'meta-author', 'meta-time', 'meta-taxonomy' ) ) ); ?>
 	</ul>
-	<?php echo $this->get( 'post_amp_content' ); // amphtml content; no kses ?>
+	<?php echo $this->get( 'post_amp_content' ); // amphtml content; no kses. ?>
+	<div class="post-footer">
+		<?php
+
+		/*
+		 * Here are our custom share buttons.
+		 */
+		do_action( 'wcus_amp_post_footer' );
+		?>
+	</div>
+</div>
+<div class="after-post">
 	<?php
+
 	/*
-	 * Here are our custom share buttons.
+	 * Here is our ad.
 	 */
-	do_action( 'wcus_amp_share' );
+	do_action( 'wcus_amp_after_post' );
 	?>
 </div>
 <?php do_action( 'amp_post_template_footer', $this ); ?>

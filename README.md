@@ -26,7 +26,8 @@ This plugin installs just as any typical WordPress plugin.  Place it in your plu
 - [AMP By Example](https://ampbyexample.com/)
 - ["Intro to AMP" Video](https://www.youtube.com/watch?v=lBTCB7yLs8Y)
 - ["How AMP Achieves its Speed" Video](https://www.youtube.com/watch?v=cfekj564rs0)
-- [Automattic AMP Plugin for WordPress](https://wordpress.org/plugins/amp/)
+- [AMP WordPress Plugin](https://wordpress.org/plugins/amp/)
+- [AMP WordPress Plugin GitHub Repo](https://github.com/Automattic/amp-wp)
 
 ### AMP Docs
 - [AMP HTML Spec](https://github.com/ampproject/amphtml/blob/master/spec/amp-html-format.md)
@@ -44,12 +45,6 @@ This plugin installs just as any typical WordPress plugin.  Place it in your plu
 - [amp-form](https://github.com/ampproject/amphtml/blob/master/extensions/amp-form/amp-form.md)
 - [amp-fx-flying-carpet](https://github.com/ampproject/amphtml/blob/master/extensions/amp-fx-flying-carpet/amp-fx-flying-carpet.md)
 - [amp-lightbox](https://github.com/ampproject/amphtml/blob/master/extensions/amp-lightbox/amp-lightbox.md)
-
-
-### To Do:
-- [ ] set placeholder image url
-- [ ] custom footer
-- [ ] customize amp URL slug
 
 ---
 Author: [John Regan](http://johnregan3.wordpress.com) | [Twitter](http://twitter.com/johnregan3) | [WordPress.org](https://profiles.wordpress.org/johnregan3)

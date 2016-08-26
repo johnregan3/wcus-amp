@@ -1,6 +1,6 @@
 <?php
 /**
- * Example of how to register CPTS with the AMP Plugin.
+ * Example of how to register CPTs with the AMP Plugin.
  *
  * @package WCUS_AMP
  */
